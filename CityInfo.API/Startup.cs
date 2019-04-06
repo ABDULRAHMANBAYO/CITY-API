@@ -35,6 +35,7 @@ namespace CityInfo.API
             {
                 app.UseDeveloperExceptionPage();
             }
+           // app.Run((contex) => { throw new Exception("Example exception"); });
             else
             {
                 app.UseHsts();
