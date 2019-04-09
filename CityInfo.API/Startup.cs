@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Serialization;
+using NLog.Extensions.Logging;
 
 namespace CityInfo.API
 {
@@ -46,6 +47,8 @@ namespace CityInfo.API
         {
             loggerfactory.AddConsole();
             loggerfactory.AddDebug();
+           // loggerfactory.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
+           loggerfactory.AddNLog();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
