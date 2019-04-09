@@ -4,21 +4,41 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using CityInfo.API.Models;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.Extensions.Logging;
 
 namespace CityInfo.API.Controllers
 {
     [Route("api/cities")]
-    public class PointofInterestControllers : Controller
+    public class PointofInterestController : Controller
     {
+        private ILogger<PointofInterestController> _logger;
+        public PointofInterestController(ILogger<PointofInterestController> logger)
+        {
+            _logger = logger;
+
+        }
         [HttpGet("{cityId}/pointsofinterest")]
         public IActionResult GetPointsOfInterest(int cityId)
         {
-            var city = CitiesDataStore.Current.Cities.FirstOrDefault(p => p.Id == cityId);
-            if (city == null)
+          
+            try
             {
-                return NotFound();
+                  throw new Exception("Exception sample");
+                var city = CitiesDataStore.Current.Cities.FirstOrDefault(p => p.Id == cityId);
+                if (city == null)
+                {
+                    _logger.LogInformation($"The city with {cityId} wasn't found when accessing point of interest");
+                    return NotFound();
+                }
+                return Ok(city.PointOfInterest);
             }
-            return Ok(city.PointOfInterest);
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"Exception while getting point of interest for {cityId}.", ex);
+                return StatusCode(500, "A problem occured while handling your request");
+            }
+
+
         }
 
         [HttpGet("{cityId}/pointsofinterest/{id}", Name = "GetPointOfInterest")]
