@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CityInfo.API.Entities;
 using CityInfo.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,6 +43,8 @@ namespace CityInfo.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
+            
+          
             //JsonSerializer settings
             // .AddJsonOptions(o=>{
             //     if (o.SerializerSettings.ContractResolver != null)
@@ -56,6 +60,10 @@ namespace CityInfo.API
 #else
             services.AddTransient<IMailService,CloudMailService>();
 #endif
+
+var connectionString="data source=localhost;Database=CityInfoDB;User ID=sa;Password=<!Passw0rd>;integrated security=False;MultipleActiveResultSets=True;";
+   
+  services.AddDbContext<CityInfoContext>(options=>options.UseSqlServer(connectionString));
 
         }
 
