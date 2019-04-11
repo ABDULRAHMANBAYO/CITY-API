@@ -19,18 +19,28 @@ namespace CityInfo.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        // public Startup(IConfiguration configuration)
+        // {
+        //     Configuration = configuration;
+        // }
 
-        public IConfiguration Configuration { get; }
+        public static IConfigurationRoot Configuration;
+
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appSettings.json",optional:false,reloadOnChange:true)
+            .AddJsonFile($"appSettings.{env.EnvironmentName}.json",optional:true,reloadOnChange:true);
+        Configuration = builder.Build();
+
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-            .AddMvcOptions(o=>o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
+            .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
             //JsonSerializer settings
             // .AddJsonOptions(o=>{
             //     if (o.SerializerSettings.ContractResolver != null)
@@ -38,24 +48,29 @@ namespace CityInfo.API
             //         var castedResolver = o.SerializerSettings.ContractResolver
             //         as DefaultContractResolver; 
             //         castedResolver.NamingStrategy= null;
-                    
+
             //     } 
             // } );
-            services.AddTransient<LocalMailService>();
+#if DEBUG
+            services.AddTransient<IMailService, LocalMailService>();
+#else
+            services.AddTransient<IMailService,CloudMailService>();
+#endif
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerfactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
             loggerfactory.AddConsole();
             loggerfactory.AddDebug();
-           // loggerfactory.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
-           loggerfactory.AddNLog();
+            // loggerfactory.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
+            loggerfactory.AddNLog();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-           // app.Run((contex) => { throw new Exception("Example exception"); });
+            // app.Run((contex) => { throw new Exception("Example exception"); });
             else
             {
                 app.UseHsts();
