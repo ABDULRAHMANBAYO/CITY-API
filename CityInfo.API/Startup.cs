@@ -61,14 +61,14 @@ namespace CityInfo.API
             services.AddTransient<IMailService,CloudMailService>();
 #endif
 
-var connectionString="data source=localhost;Database=CityInfoDB;User ID=sa;Password=<!Passw0rd>;integrated security=False;MultipleActiveResultSets=True;";
+var connectionString=Startup.Configuration["connectionStrings:cityInfoAPIDBConnectionString"];
    
   services.AddDbContext<CityInfoContext>(options=>options.UseSqlServer(connectionString));
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory,CityInfoContext cityInfoContext)
         {
             loggerfactory.AddConsole();
             loggerfactory.AddDebug();
@@ -83,6 +83,7 @@ var connectionString="data source=localhost;Database=CityInfoDB;User ID=sa;Passw
             {
                 app.UseHsts();
             }
+            cityInfoContext.EnsureSeedDataForContext();
             //Format status code
 
             app.UseStatusCodePages();

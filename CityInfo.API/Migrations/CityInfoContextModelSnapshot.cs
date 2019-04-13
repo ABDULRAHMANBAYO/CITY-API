@@ -44,6 +44,9 @@ namespace CityInfo.API.Migrations
 
                     b.Property<int>("CityId");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(50);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50);
@@ -52,7 +55,7 @@ namespace CityInfo.API.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.ToTable("PointOfInterest");
+                    b.ToTable("PointOfInterest","dbo");
                 });
 
             modelBuilder.Entity("CityInfo.API.Entities.PointOfInterest", b =>

@@ -8,19 +8,16 @@ namespace CityInfo.API.Entities
 {
     public class CityInfoContext : DbContext
     {
-        public CityInfoContext(DbContextOptions <CityInfoContext> options):base(options)
+        public CityInfoContext(DbContextOptions<CityInfoContext> options) : base(options)
         {
-            Database.EnsureCreated();
+            // Database.Migrate();
 
         }
         public DbSet<City> Cities { get; set; }
         public DbSet<PointOfInterest> PointOfInterest { get; set; }
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionBuilder)
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         // {
-        //     optionBuilder.UseSqlServer("connectionString");
-        //     base.OnConfiguring(optionBuilder);
+        //     optionsBuilder.UseSqlServer(@"data source=localhost;Database=CityInfoAPIDB;User ID=sa;Password=<!Passw0rd>;integrated security=False;MultipleActiveResultSets=True;");
         // }
-
     }
-
 }

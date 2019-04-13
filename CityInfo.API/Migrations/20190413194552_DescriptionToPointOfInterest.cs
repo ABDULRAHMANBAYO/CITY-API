@@ -2,7 +2,7 @@
 
 namespace CityInfo.API.Migrations
 {
-    public partial class SecondMigration : Migration
+    public partial class DescriptionToPointOfInterest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
