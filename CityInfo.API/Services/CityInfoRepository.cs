@@ -10,9 +10,14 @@ namespace CityInfo.API.Services
     public class CityInfoRepository : ICityInfoRepository
     {
         private CityInfoContext _context;
-        private CityInfoRepository(CityInfoContext context)
+        public CityInfoRepository(CityInfoContext context)
         {
             _context = context;
+        }
+
+        public bool CityExists(int cityId)
+        {
+            return _context.Cities.Any(c=>c.Id==cityId);
         }
         public IEnumerable<City> GetCities()
         {

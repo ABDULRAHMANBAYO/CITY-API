@@ -5,6 +5,7 @@
    "version": "0.2.0",
    "configurations": [
        
+       
    
         {
             "name": ".NET Core Launch (web)",
@@ -20,7 +21,7 @@
                 "enabled": true
             },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Production"
+                "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
