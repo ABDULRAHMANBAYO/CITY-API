@@ -32,9 +32,9 @@ namespace CityInfo.API
         {
             var builder = new ConfigurationBuilder()
             .SetBasePath(env.ContentRootPath)
-            .AddJsonFile("appSettings.json",optional:false,reloadOnChange:true)
-            .AddJsonFile($"appSettings.{env.EnvironmentName}.json",optional:true,reloadOnChange:true);
-        Configuration = builder.Build();
+            .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appSettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+            Configuration = builder.Build();
 
         }
 
@@ -43,8 +43,8 @@ namespace CityInfo.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
             .AddMvcOptions(o => o.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter()));
-            
-          
+
+
             //JsonSerializer settings
             // .AddJsonOptions(o=>{
             //     if (o.SerializerSettings.ContractResolver != null)
@@ -61,16 +61,16 @@ namespace CityInfo.API
             services.AddTransient<IMailService,CloudMailService>();
 #endif
 
-var connectionString=Startup.Configuration["connectionStrings:cityInfoAPIDBConnectionString"];
-   
-  services.AddDbContext<CityInfoContext>(options=>options.UseSqlServer(connectionString));
-  services.AddScoped<ICityInfoRepository,CityInfoRepository>();
-  
+            var connectionString = Startup.Configuration["connectionStrings:cityInfoAPIDBConnectionString"];
+
+            services.AddDbContext<CityInfoContext>(options => options.UseSqlServer(connectionString));
+            services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory,CityInfoContext cityInfoContext)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory, CityInfoContext cityInfoContext)
         {
             loggerfactory.AddConsole();
             loggerfactory.AddDebug();
@@ -89,6 +89,11 @@ var connectionString=Startup.Configuration["connectionStrings:cityInfoAPIDBConne
             //Format status code
 
             app.UseStatusCodePages();
+            AutoMapper.Mapper.Initialize(c=>{
+                c.CreateMap<Entities.City,Models.CityWithoutPointsOfInterestDto>();
+                c.CreateMap<Entities.City,Models.CityDto>();
+                c.CreateMap<Entities.PointOfInterest,Models.PointOfInterestDto>();
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc();
